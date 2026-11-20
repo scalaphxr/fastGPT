@@ -33,3 +33,5 @@ fastGPT adds **Open with Codex** to the Windows File Explorer context menu. It l
 Setup and launch use your existing user permissions. Codex CLI may prompt you to sign in on first launch.
 
 To remove fastGPT, go to **Settings → Apps → Installed apps → fastGPT → Uninstall**. To build the installer on 64-bit Windows, run the PowerShell command above.
+
+The context menu icon comes from the [ChatGPT website](https://chatgpt.com/). The icon belongs to OpenAI. fastGPT is an unofficial project.

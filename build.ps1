@@ -5,7 +5,7 @@ $csc = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 $dist = Join-Path $PSScriptRoot 'dist'
 New-Item -ItemType Directory -Force $dist | Out-Null
 
-& $csc /nologo /optimize+ /target:winexe /codepage:65001 "/out:$dist\fastGPT-Setup.exe" "/win32manifest:$PSScriptRoot\app.manifest" "$PSScriptRoot\fastGPT.cs"
+& $csc /nologo /optimize+ /target:winexe /codepage:65001 "/out:$dist\fastGPT-Setup.exe" "/win32manifest:$PSScriptRoot\app.manifest" "/resource:$PSScriptRoot\assets\chatgpt.ico,chatgpt.ico" "$PSScriptRoot\fastGPT.cs"
 if ($LASTEXITCODE -ne 0) { throw 'Сборка не удалась' }
 
 (Get-FileHash "$dist\fastGPT-Setup.exe" -Algorithm SHA256).Hash

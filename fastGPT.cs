@@ -5,19 +5,22 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
 [assembly: AssemblyTitle("fastGPT")]
 [assembly: AssemblyProduct("fastGPT")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.1.0")]
+[assembly: AssemblyFileVersion("1.0.1.0")]
 
 // Один exe на всё: без аргументов это установщик, с "open <папка>" - запуск Codex.
 static class FastGPT
 {
-    public const string Version = "1.0.0";
+    public const string Version = "1.0.1";
     const string MenuKey = "OpenWithCodex";
+    const string MenuIconFile = "chatgpt.ico";
+    const int AssociationChanged = 0x08000000;
     const string UninstallKey = @"Software\Microsoft\Windows\CurrentVersion\Uninstall\fastGPT";
     public const string CodexUrl = "https://developers.openai.com/codex/cli";
 
@@ -30,6 +33,10 @@ static class FastGPT
     static string ExePath { get { return Assembly.GetExecutingAssembly().Location; } }
     static string InstallDir { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Programs\fastGPT"); } }
     static string InstalledExe { get { return Path.Combine(InstallDir, "fastGPT.exe"); } }
+    static string InstalledMenuIcon { get { return Path.Combine(InstallDir, MenuIconFile); } }
+
+    [DllImport("shell32.dll")]
+    static extern void SHChangeNotify(int eventId, uint flags, IntPtr item1, IntPtr item2);
 
     [STAThread]
     static int Main(string[] args)
@@ -110,14 +117,17 @@ static class FastGPT
         if (!string.Equals(Path.GetFullPath(ExePath), Path.GetFullPath(InstalledExe), StringComparison.OrdinalIgnoreCase))
             File.Copy(ExePath, InstalledExe, true);
 
-        string icon = InstalledExe;
+        using (Stream source = Assembly.GetExecutingAssembly().GetManifestResourceStream(MenuIconFile))
+        using (Stream destination = File.Create(InstalledMenuIcon))
+            source.CopyTo(destination);
+
         foreach (string shellClass in ShellClasses)
         {
             using (RegistryKey key = Registry.CurrentUser.CreateSubKey(@"Software\Classes\" + shellClass + @"\shell\" + MenuKey))
             using (RegistryKey command = key.CreateSubKey("command"))
             {
                 key.SetValue("", T("Открыть с помощью Codex", "Open with Codex"));
-                key.SetValue("Icon", icon);
+                key.SetValue("Icon", "\"" + InstalledMenuIcon + "\"");
                 command.SetValue("", "\"" + InstalledExe + "\" open \"%V\\.\"");
             }
         }
@@ -134,6 +144,7 @@ static class FastGPT
             key.SetValue("NoRepair", 1, RegistryValueKind.DWord);
 
         }
+        SHChangeNotify(AssociationChanged, 0, IntPtr.Zero, IntPtr.Zero);
     }
 
     public static void Uninstall()
@@ -141,6 +152,8 @@ static class FastGPT
         foreach (string shellClass in ShellClasses)
             Registry.CurrentUser.DeleteSubKeyTree(@"Software\Classes\" + shellClass + @"\shell\" + MenuKey, false);
         Registry.CurrentUser.DeleteSubKeyTree(UninstallKey, false);
+        File.Delete(InstalledMenuIcon);
+        SHChangeNotify(AssociationChanged, 0, IntPtr.Zero, IntPtr.Zero);
 
         // Windows unlocks the installed executable when this process exits.
         string system = Environment.SystemDirectory;
