@@ -1,81 +1,35 @@
-# fastClaude
+# fastGPT
 
-Открывайте любую папку в [Claude Code](https://claude.com/claude-code) в один клик: правая кнопка мыши → **«Открыть с помощью Claude»**. Откроется cmd от имени администратора, и Claude Code запустится сразу в этой папке.
+fastGPT добавляет команду **«Открыть с помощью Codex»** в контекстное меню Проводника Windows. Она запускает [Codex CLI](https://developers.openai.com/codex/cli) с выбранной папкой в качестве рабочей директории.
 
-[English version below](#english)
+[English version](#english)
 
-## Установка
+## Установка и запуск
 
-**[⬇ Скачать fastClaude-Setup.exe](https://github.com/scalaphxr/fastClaude/releases/latest/download/fastClaude-Setup.exe)**
+1. Установите Codex CLI. Команда codex должна быть доступна в PATH.
+2. Скачайте [fastGPT-Setup.exe](https://github.com/scalaphxr/fastGPT/releases/latest/download/fastGPT-Setup.exe), запустите его и нажмите **Установить**.
+3. Щёлкните правой кнопкой мыши по папке, диску или свободному месту внутри папки. Выберите **«Открыть с помощью Codex»**. В Windows 11 этот пункт доступен в меню **«Показать дополнительные параметры»**.
 
-1. Запустите скачанный файл.
-2. Если появится окно «Windows защитила ваш компьютер», нажмите **Подробнее → Выполнить в любом случае**. Оно появляется потому, что файл не подписан платным сертификатом.
-3. Нажмите **Установить**.
+Установка и запуск работают с правами текущего пользователя. При первом запуске Codex CLI может предложить войти в аккаунт.
 
-Права администратора для установки не нужны. Перезагрузка тоже не нужна.
+Для удаления откройте **Параметры → Приложения → Установленные приложения → fastGPT → Удалить**.
 
-Claude Code должен быть уже [установлен](https://claude.com/claude-code). Подойдут Windows 10 и 11, дополнительно ничего ставить не надо.
+## Сборка
 
-## Как пользоваться
-
-Нажмите правой кнопкой на папку, на диск или на пустое место внутри папки и выберите **«Открыть с помощью Claude»**. Подтвердите запрос Windows на права администратора.
-
-В Windows 11 пункт находится в **«Показать дополнительные параметры»**. Чтобы он был виден сразу, отметьте при установке галочку «Вернуть классическое меню Windows». Она меняет вид меню правого клика для всех программ, а при удалении fastClaude меню вернётся как было.
-
-## Важно
-
-Claude Code будет работать с правами администратора, то есть сможет менять любые файлы и настройки системы. Не открывайте так папки, которым не доверяете: файлы из них могут влиять на поведение Claude.
-
-## Удаление
-
-**Параметры → Приложения → Установленные приложения → fastClaude → Удалить**.
-
-## Сборка из исходников
-
-```powershell
+~~~powershell
 powershell -ExecutionPolicy Bypass -File build.ps1
-```
+~~~
 
-Весь код находится в [`fastClaude.cs`](fastClaude.cs). Готовый файл появится в `dist\`.
-
-fastClaude — неофициальный проект, он не связан с Anthropic.
-
----
+На 64-разрядной Windows сборка использует компилятор .NET Framework 4 и создаёт dist\fastGPT-Setup.exe.
 
 ## English
 
-Open any folder in [Claude Code](https://claude.com/claude-code) with one click: right-click → **Open with Claude**. An administrator cmd window opens with Claude Code already running in that folder.
+fastGPT adds **Open with Codex** to the Windows File Explorer context menu. It launches [Codex CLI](https://developers.openai.com/codex/cli) with the selected folder as its working directory.
 
-### Install
+1. Install Codex CLI and make sure codex is on your PATH.
+2. Download and run [fastGPT-Setup.exe](https://github.com/scalaphxr/fastGPT/releases/latest/download/fastGPT-Setup.exe) and select **Install**.
+3. Right-click a folder, a drive, or empty space inside a folder. Choose **Open with Codex**. On Windows 11, look under **Show more options**.
 
-**[⬇ Download fastClaude-Setup.exe](https://github.com/scalaphxr/fastClaude/releases/latest/download/fastClaude-Setup.exe)**
+Setup and launch use your existing user permissions. Codex CLI may prompt you to sign in on first launch.
 
-1. Run the downloaded file.
-2. If you see "Windows protected your PC", click **More info → Run anyway**. It appears because the file isn't signed with a paid certificate.
-3. Click **Install**.
-
-No administrator rights or restart needed for setup. Claude Code must already be [installed](https://claude.com/claude-code). Works on Windows 10 and 11 with nothing else to install.
-
-### Use
-
-Right-click a folder, a drive, or empty space inside a folder, choose **Open with Claude**, and approve the Windows administrator prompt.
-
-On Windows 11 the item is under **Show more options**. To see it right away, tick "Restore the classic Windows menu" during setup. This changes the right-click menu for all apps, and removing fastClaude puts it back.
-
-### Important
-
-Claude Code runs with administrator rights, so it can change any file or system setting. Don't open folders you don't trust this way: their files can influence what Claude does.
-
-### Remove
-
-**Settings → Apps → Installed apps → fastClaude → Uninstall**.
-
-### Build from source
-
-```powershell
-powershell -ExecutionPolicy Bypass -File build.ps1
-```
-
-All the code is in [`fastClaude.cs`](fastClaude.cs). The result appears in `dist\`.
-
-fastClaude is an unofficial project and isn't affiliated with Anthropic.
+To remove fastGPT, go to **Settings → Apps → Installed apps → fastGPT → Uninstall**. To build the installer on 64-bit Windows, run the PowerShell command above.
